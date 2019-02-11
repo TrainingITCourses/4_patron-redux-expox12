@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ApiService } from 'src/app/store/api.service';
 import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state';
-import { LoadStatuses, LoadAgencies, LoadMissions } from 'src/app/store/global-store.actions';
+import { LoadStatuses, LoadAgencies, LoadMissions, LoadFilter } from 'src/app/store/global-store.actions';
 
 @Component({
   selector: 'app-web-search',
@@ -10,7 +10,7 @@ import { LoadStatuses, LoadAgencies, LoadMissions } from 'src/app/store/global-s
 })
 export class WebSearchComponent implements OnInit {
 
-  private resultCrit: any = { id: 0, value: "status" };
+  private resultCrit: any;
   private filterValues: any[];
 
   @Output() private filterForLaunches = new EventEmitter();
@@ -18,16 +18,46 @@ export class WebSearchComponent implements OnInit {
   constructor(private apiService: ApiService, private store: GlobalStore) { }
 
   ngOnInit() {
-    this.onCritValueChange(this.resultCrit);
+    this.observeCritType();
+    this.observeSelectValue();
   }
 
-  /*onCritValueChange(value: any) {
-    this.resultCrit = value;
-    // LLamada a la api para obtener el resultado según el tipo seleccionado
-    // this.resultCrit = this.apiService.getCritResult(value)
-    console.log(value);
-  }*/
+  private observeSelectValue() {
+    this.store.select$(GlobalSlideTypes.selectValue).subscribe(el => {
+      const critType = this.store.selectSnapShot(GlobalSlideTypes.critType);
+      this.store.dispatch(new LoadFilter({ type: critType.value, value: el }));
+    });
+  }
 
+  private observeCritType() {
+    this.store.select$(GlobalSlideTypes.critType).subscribe(type => {
+      this.loadData(type);
+    });
+  }
+
+  private loadData(criterionType: any) {
+    this.resultCrit = criterionType;
+
+    switch (this.resultCrit.value) {
+      case 'status':
+        this.apiService.getLaunchStatus().subscribe(data => {
+          this.filterValues = data;
+        });
+        break;
+      case 'agency':
+        this.apiService.getAgencies().subscribe(data => {
+          this.filterValues = data;
+        });
+        break;
+      case 'mission':
+        this.apiService.getMissions().subscribe(data => {
+          this.filterValues = data;
+        });
+        break;
+      default:
+    }
+    this.filterValues = Object.assign([], this.filterValues);
+  }
 
   onCritValueChange = (criterionType: any) => {
     this.resultCrit = criterionType;
@@ -50,11 +80,6 @@ export class WebSearchComponent implements OnInit {
         break;
       default:
     }
-  }
-
-  private onChangeFilterValue(el) {
-    // crear nuevo action con el objeto completo de la busqueda
-    this.filterForLaunches.next({ type: this.resultCrit.value, value: el });
   }
 
 

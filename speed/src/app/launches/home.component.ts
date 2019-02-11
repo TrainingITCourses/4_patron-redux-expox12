@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../store/api.service';
 import { Launch } from '../store/models/launch';
 import { GlobalStore, GlobalSlideTypes } from '../store/global-store.state';
-import { LoadLaunches, LoadCounter } from '../store/global-store.actions';
+import { LoadCounter, LoadLaunches } from '../store/global-store.actions';
 
 @Component({
   selector: 'app-home',
@@ -11,44 +11,30 @@ import { LoadLaunches, LoadCounter } from '../store/global-store.actions';
 })
 export class HomeComponent implements OnInit {
 
-  private launches: Launch[];
-  private counter: number = 0;
+  private launches: Launch[]; //--
+  private counter: number = 0; //--
 
   constructor(private apiService: ApiService, private store: GlobalStore) { }
 
   ngOnInit() {
-    //this.apiService.getLaunches_();
-    this.observeLaunches();
-    this.observeCounter();
-    this.apiService.getAllLaunches().subscribe(launches => this.store.dispatch(new LoadLaunches(launches)));
-  }
+    this.observeFilter();
+  }  
 
-  private observeLaunches() {
-    this.store.select$(GlobalSlideTypes.launches).subscribe(launches => {
-      this.launches = [ ...launches ];
-      this.store.dispatch(new LoadCounter(this.launches.length));
-      console.log(launches);
-    });
-  }
-
-  private observeCounter() {
-    this.store.select$(GlobalSlideTypes.counter).subscribe(counter => {
-      console.log(counter);
-      this.counter = counter;
+  private observeFilter() {
+    this.store.select$(GlobalSlideTypes.filter).subscribe(filter => {
+      this.onSelectFilter(filter);
     });
   }
 
   onSelectFilter(filter) {
-    if(filter.value == 0) return;
-    /*
+    if(!filter.value) return;
     this.apiService.getLaunches(filter).subscribe(res => {
-      this.launches = Object.assign([], res);
-      console.log(this.launches);
-      this.counter = this.launches.length;
+      this.store.dispatch(new LoadLaunches(res));
+      this.store.dispatch(new LoadCounter(res.length));
 
     }, error => {
       console.error("error");
-    });*/
+    });
 
     
   }

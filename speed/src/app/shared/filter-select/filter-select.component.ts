@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state';
+import { GlobalStore } from 'src/app/store/global-store.state';
+import { LoadSelectValue } from 'src/app/store/global-store.actions';
 
 @Component({
   selector: 'app-filter-select',
@@ -9,34 +10,18 @@ import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state'
 })
 export class FilterSelectComponent implements OnInit {
 
-  public criterionValues: any[];
-  @Output() private changeFilterValue = new EventEmitter();
+  @Input() public criterionValues: any[];
+  @Output() private changeFilterValue = new EventEmitter(); //--
 
-  constructor(private store: GlobalStore, private cdr: ChangeDetectorRef) { }
+  constructor(private store: GlobalStore) { }
 
   ngOnInit() {
-    this.observeCriterionResult();
-  }
-
-  private observeCriterionResult() {
-    this.store.select$(GlobalSlideTypes.agencies).subscribe(agencies => {
-      this.criterionValues = agencies;
-      this.cdr.detectChanges();
-    });
-    this.store.select$(GlobalSlideTypes.statuses).subscribe(statuses => {
-      this.criterionValues = statuses;
-      this.cdr.detectChanges();
-    });
-    this.store.select$(GlobalSlideTypes.missions).subscribe(missions => {
-      this.criterionValues = missions;
-      this.cdr.detectChanges();
-    });
-    
   }
 
   private selectFilterValue( filterValue ) {
     const valueId = parseInt(filterValue, 10);
-    this.changeFilterValue.next(valueId);
+    //this.changeFilterValue.next(valueId);
+    this.store.dispatch(new LoadSelectValue(valueId));
   }
 
 }

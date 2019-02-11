@@ -6,6 +6,9 @@ export interface Global {
     missions: Mission[];
     statuses: Status[];
     counter : number;
+    critType: any;
+    selectValue : number;
+    filter: any;
 }
 
 export const globalinitialState: any = {
@@ -13,5 +16,8 @@ export const globalinitialState: any = {
     agencies: [],
     missions: [],
     statuses: [],
-    counter : 0
+    counter : 0,
+    critType: { id: 0, value: "status" },
+    selectValue: 0,
+    filter: {}
 }

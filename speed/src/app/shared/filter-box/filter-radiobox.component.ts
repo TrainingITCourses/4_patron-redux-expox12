@@ -1,4 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { GlobalStore } from 'src/app/store/global-store.state';
+import { LoadCritType } from 'src/app/store/global-store.actions';
 
 @Component({
   selector: 'app-filter-radiobox',
@@ -7,15 +9,16 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class FilterRadioBoxComponent implements OnInit {
 
-  @Output() private critValue = new EventEmitter();
+  @Output() private critValue = new EventEmitter(); //--
 
-  constructor() { }
+  constructor(private store: GlobalStore) { }
 
   ngOnInit() {
   }
 
   private onChangeCriterion(value) {
-    this.critValue.next(value);
+    this.store.dispatch(new LoadCritType(value));
+    //this.critValue.next(value);
   }
 
 }

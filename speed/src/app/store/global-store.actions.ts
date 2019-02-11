@@ -5,7 +5,10 @@ export enum GlobalActionTypes {
     LoadAgencies = '[Global] LoadAgencies',
     LoadStatuses = '[Global] LoadStatuses',
     LoadMissions = '[Global] LoadMissions',
-    LoadCounter  = '[Global] LoadCounter'
+    LoadCounter  = '[Global] LoadCounter',
+    LoadCritType = '[Global] LoadCritType',
+    LoadSelectValue = '[Global] LoadSelectValue',
+    LoadFilter = '[Global] LoadFilter'
   }
   
   export interface Action {
@@ -38,6 +41,21 @@ export enum GlobalActionTypes {
     constructor(public readonly payload: number) {}
   }
 
+  export class LoadCritType implements Action {
+    public readonly type = GlobalActionTypes.LoadCritType;
+    constructor(public readonly payload: any) {}
+  }
+
+  export class LoadSelectValue implements Action {
+    public readonly type = GlobalActionTypes.LoadSelectValue;
+    constructor(public readonly payload: number) {}
+  }
+
+  export class LoadFilter implements Action {
+    public readonly type = GlobalActionTypes.LoadFilter;
+    constructor(public readonly payload: any) {}
+  }
+
   
-  export type GlobalActions = LoadLaunches | LoadAgencies | LoadStatuses | LoadMissions | LoadCounter;
+  export type GlobalActions = LoadLaunches | LoadAgencies | LoadStatuses | LoadMissions | LoadCounter | LoadCritType | LoadSelectValue | LoadFilter;
   

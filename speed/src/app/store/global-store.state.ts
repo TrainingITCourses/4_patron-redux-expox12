@@ -11,7 +11,10 @@ export class GlobalStore {
     private statuses$ = new BehaviorSubject<any>(this.state.statuses);
     private agencies$ = new BehaviorSubject<any>(this.state.agencies);
     private missions$ = new BehaviorSubject<any>(this.state.missions);
-    private counter$ = new BehaviorSubject<any>(this.state.counter);
+    private counter$ = new BehaviorSubject<number>(this.state.counter);
+    private critType$ = new BehaviorSubject<any>(this.state.critType);
+    private selectValue$ = new BehaviorSubject<number>(this.state.critType);
+    private filter$ = new BehaviorSubject<any>(this.state.filter);
 
     constructor() {
     }
@@ -28,6 +31,12 @@ export class GlobalStore {
                 return this.missions$.asObservable();
             case GlobalSlideTypes.counter:
                 return this.counter$.asObservable();
+            case GlobalSlideTypes.critType:
+                return this.critType$.asObservable();
+            case GlobalSlideTypes.selectValue:
+                return this.selectValue$.asObservable();
+            case GlobalSlideTypes.filter:
+                return this.filter$.asObservable();
         }
     }
 
@@ -43,6 +52,12 @@ export class GlobalStore {
                 return [...this.state.missions];
             case GlobalSlideTypes.counter:
                 return this.state.counter;
+            case GlobalSlideTypes.critType:
+                return {...this.state.critType};
+            case GlobalSlideTypes.selectValue:
+                return this.state.selectValue;
+            case GlobalSlideTypes.filter:
+                return {...this.state.filter};
         }
     };
 
@@ -64,6 +79,15 @@ export class GlobalStore {
             case GlobalActionTypes.LoadCounter:
                 this.counter$.next(this.state.counter);
                 break;
+            case GlobalActionTypes.LoadCritType:
+                this.critType$.next({...this.state.critType});
+                break;
+            case GlobalActionTypes.LoadSelectValue:
+                this.selectValue$.next(this.state.selectValue);
+                break;
+            case GlobalActionTypes.LoadFilter:
+                this.filter$.next({...this.state.filter});
+                break;
         }
     }
 
@@ -74,5 +98,8 @@ export enum GlobalSlideTypes {
     statuses = 'statuses',
     agencies = 'agencies',
     missions = 'missions',
-    counter  = 'counter'
+    counter  = 'counter',
+    critType = 'critType',
+    selectValue = 'selectValue',
+    filter = 'filter'
 }

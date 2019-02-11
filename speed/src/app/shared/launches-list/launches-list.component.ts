@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Launch } from 'src/app/store/models/launch';
+import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state';
 
 @Component({
   selector: 'app-launches-list',
@@ -9,11 +10,20 @@ import { Launch } from 'src/app/store/models/launch';
 })
 export class LaunchesListComponent implements OnInit {
 
-  @Input() private launchList: Launch[];
+  @Input() private launchList: Launch[]; //--
+  private launchesList: Launch[];
 
-  constructor() { }
+  constructor(private store: GlobalStore, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.observeLaunches();
+  }
+
+  private observeLaunches() {
+    this.store.select$(GlobalSlideTypes.launches).subscribe(launches => {
+      this.launchesList = launches;
+      this.cdr.detectChanges();
+    })
   }
 
 }

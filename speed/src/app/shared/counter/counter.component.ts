@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state';
 
 @Component({
   selector: 'app-counter',
@@ -8,11 +9,21 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 })
 export class CounterComponent implements OnInit {
 
-  @Input() private counter;
+  @Input() private counter; //--
+  private count;
 
-  constructor() { }
+  constructor(private store: GlobalStore, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.observeCounter();
+  }
+
+  private observeCounter() {
+    this.store.select$(GlobalSlideTypes.counter).subscribe(counter => {
+      this.count = counter;
+      this.cdr.detectChanges();
+
+    });
   }
 
 }

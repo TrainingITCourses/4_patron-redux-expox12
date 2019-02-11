@@ -23,6 +23,15 @@ export function globalStoreReducer( state = globalinitialState, action: GlobalAc
         case GlobalActionTypes.LoadCounter:
             result.counter = action.payload;
             break;
+        case GlobalActionTypes.LoadCritType:
+            result.critType = action.payload;
+            break;
+        case GlobalActionTypes.LoadSelectValue:
+            result.selectValue = action.payload;
+            break;
+        case GlobalActionTypes.LoadFilter:
+            result.filter = action.payload;
+            break;
     }
     return result;
 }

@@ -1,4 +1,4 @@
 <div>
   <app-filter-radiobox (critValue)="onCritValueChange($event)"></app-filter-radiobox>
-  <app-filter-select (changeFilterValue)="onChangeFilterValue($event)"></app-filter-select>
+  <app-filter-select [criterionValues]="filterValues" (changeFilterValue)="onChangeFilterValue($event)"></app-filter-select>
 </div>
