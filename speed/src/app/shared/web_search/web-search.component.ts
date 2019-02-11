@@ -1,5 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ApiService } from 'src/app/store/api.service';
+import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state';
+import { LoadStatuses, LoadAgencies, LoadMissions } from 'src/app/store/global-store.actions';
 
 @Component({
   selector: 'app-web-search',
@@ -13,7 +15,7 @@ export class WebSearchComponent implements OnInit {
 
   @Output() private filterForLaunches = new EventEmitter();
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private store: GlobalStore) { }
 
   ngOnInit() {
     this.onCritValueChange(this.resultCrit);
@@ -26,31 +28,32 @@ export class WebSearchComponent implements OnInit {
     console.log(value);
   }*/
 
+
   onCritValueChange = (criterionType: any) => {
     this.resultCrit = criterionType;
 
     switch (this.resultCrit.value) {
       case 'status':
         this.apiService.getLaunchStatus().subscribe(data => {
-          this.filterValues = data;
+          this.store.dispatch(new LoadStatuses(data))
         });
         break;
       case 'agency':
         this.apiService.getAgencies().subscribe(data => {
-          this.filterValues = data;
+          this.store.dispatch(new LoadAgencies(data))
         });
         break;
       case 'mission':
         this.apiService.getMissions().subscribe(data => {
-          this.filterValues = data;
+          this.store.dispatch(new LoadMissions(data))
         });
         break;
       default:
     }
-    this.filterValues = Object.assign([], this.filterValues);
   }
 
   private onChangeFilterValue(el) {
+    // crear nuevo action con el objeto completo de la busqueda
     this.filterForLaunches.next({ type: this.resultCrit.value, value: el });
   }
 

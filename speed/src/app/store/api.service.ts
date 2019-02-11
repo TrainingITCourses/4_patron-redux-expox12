@@ -6,13 +6,15 @@ import { HttpClient } from '@angular/common/http';
 import { Agency } from './models/agency';
 import { Mission } from './models/mission';
 import { Launch } from './models/launch';
+import { GlobalStore } from './global-store.state';
+import { LoadLaunches } from './global-store.actions';
 
 @Injectable()
 export class ApiService {
 
     private baseUrl : String = '/assets/data/';
 
-    constructor(private httpClient: HttpClient) {}
+    constructor(private httpClient: HttpClient, private store: GlobalStore) {}
 
     getLaunchStatus(): Observable<Status[]> {
         return this.httpClient.get<Status[]>(this.baseUrl + 'launchstatus.json')
@@ -27,6 +29,11 @@ export class ApiService {
     getMissions(): Observable<Mission[]> {
         return this.httpClient.get<Status[]>(this.baseUrl + 'missiontypes.json')
         .pipe(map((res: any) => res.types));
+    }
+
+    getAllLaunches(): Observable<Launch[]> {
+        return this.httpClient.get(window.location.href + this.baseUrl + 'launches.json')
+        .pipe(map((res: any) => res.launches));
     }
 
     // type, value

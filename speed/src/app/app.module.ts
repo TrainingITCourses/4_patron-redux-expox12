@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from './store/api.service';
 
 import { CounterComponent, FilterRadioBoxComponent, FilterSelectComponent, LaunchesListComponent, WebSearchComponent } from "./shared/index";
+import { GlobalStore } from './store/global-store.state';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { CounterComponent, FilterRadioBoxComponent, FilterSelectComponent, Launc
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [ApiService],
+  providers: [ApiService, GlobalStore],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

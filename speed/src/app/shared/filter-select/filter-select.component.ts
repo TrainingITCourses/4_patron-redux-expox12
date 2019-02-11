@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { GlobalStore, GlobalSlideTypes } from 'src/app/store/global-store.state';
 
 @Component({
   selector: 'app-filter-select',
@@ -8,12 +9,29 @@ import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy
 })
 export class FilterSelectComponent implements OnInit {
 
-  @Input() private criterionValues: any[];
+  public criterionValues: any[];
   @Output() private changeFilterValue = new EventEmitter();
 
-  constructor() { }
+  constructor(private store: GlobalStore, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.observeCriterionResult();
+  }
+
+  private observeCriterionResult() {
+    this.store.select$(GlobalSlideTypes.agencies).subscribe(agencies => {
+      this.criterionValues = agencies;
+      this.cdr.detectChanges();
+    });
+    this.store.select$(GlobalSlideTypes.statuses).subscribe(statuses => {
+      this.criterionValues = statuses;
+      this.cdr.detectChanges();
+    });
+    this.store.select$(GlobalSlideTypes.missions).subscribe(missions => {
+      this.criterionValues = missions;
+      this.cdr.detectChanges();
+    });
+    
   }
 
   private selectFilterValue( filterValue ) {
